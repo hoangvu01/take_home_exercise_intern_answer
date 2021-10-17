@@ -1,10 +1,13 @@
+// Registers required functions
 $(document).ready(function(){
     $("#submit-button").click(submitQuery);
 });
 
+// Callback function for the SUBMIT button on the query form
 function submitQuery(e){
-    $("#price").val("0.00");
+    $("#price").text("");
 
+    // Retrieve data from the FORM
     let values = $("#quote-query").serializeArray();
     let data = {};
     values.forEach((x) => {
@@ -16,8 +19,12 @@ function submitQuery(e){
         return;
     }
 
+    // Display waiting message
+    $("#price").text("Executing your query...please wait a minute...");
+
     let msgTemplate = "A delivery from <pickup_postcode> to <delivery_postcode> using a <vehicle> will cost you £<price>.";
 
+    // Make the API call
     $.ajax({
         type: "POST",
         contentType: "application/json",
@@ -36,13 +43,13 @@ function submitQuery(e){
         error: function(xhr, error) {
             switch (xhr.status) {
                 case 400:
-                    alert("1 or more invalid parameters");
+                    $("#price").text("1 or more invalid parameters");
                     return;
                 case 500:
-                    alert("Cannot process your request at the moment");
+                    $("#price").text("Cannot process your request at the moment");
                     return;
                 default:
-                    alert("Unknown error...");
+                    $("#price").text("Unknown error occured, please try again!");
             }
         }
     });
