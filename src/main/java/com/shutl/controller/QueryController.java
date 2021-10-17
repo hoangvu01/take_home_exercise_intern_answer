@@ -36,4 +36,9 @@ public class QueryController {
     model.addAttribute("quote", quote);
     return "result";
   }
+
+  @RequestMapping(value = "/_q", method = GET)
+  public String getRealTimeQueryForm() {
+    return "realtime";
+  }
 }
