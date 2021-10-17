@@ -1,4 +1,4 @@
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE HTML>
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
@@ -22,6 +22,8 @@
                 return;
             }
 
+            let msgTemplate = "A delivery from <pickup_postcode> to <delivery_postcode> using a <vehicle> will cost you £<price>.";
+
             $.ajax({
                 type: "POST",
                 contentType: "application/json",
@@ -30,7 +32,12 @@
                 dataType: "json",
                 success: function(response){
                     console.log(response);
-                    $("#price").val(response.price);
+                    let msg = msgTemplate.replace("<pickup_postcode>", response.pickupPostcode);
+                    msg = msg.replace("<delivery_postcode>", response.deliveryPostcode);
+                    msg = msg.replace("<vehicle>", response.vehicle);
+                    msg = msg.replace("<price>", response.price);
+
+                    $("#price").text(msg);
                 },
                 error: function(xhr, error) {
                     switch (xhr.status) {
@@ -56,24 +63,28 @@
 	<form id="quote-query" action="/quote">
 	    <p>
 	        <label> Pickup Postcode</label>
-	        <input type="text" name="pickupPostcode"/>
+	        <input type="text" name="pickupPostcode" value="SW1A1AA"/>
         </p>
 
         <p>
             <label>Delivery Postcode</label>
-            <input type="text" name="deliveryPostcode"/>
+            <input type="text" name="deliveryPostcode" value="EC2A3LT"/>
         </p>
 
         <p>
             <label path="vehicle">Vehicle</label>
-            <input type="text" name="vehicle"/>
+            <select name="vehicle" id="vehicles">
+              <option value="bicycle">Bicycle</option>
+              <option value="motorbike">Motorbike</option>
+              <option value="parcel_car">Parcel Car</option>
+              <option value="small_van">Small Van</option>
+              <option value="large_van">Large Van</option>
+            </select>
         </p>
 
 	</form>
-	<p>
-	    <label> Price </label>
-        <input type="text" id="price" value="0.00" readonly/>
-    </p>
+	<p id="price"></p>
+
     <button id="submit-button" type="button">Submit</button>
 </body>
 </html>

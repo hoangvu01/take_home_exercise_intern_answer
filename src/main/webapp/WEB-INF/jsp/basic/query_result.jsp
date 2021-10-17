@@ -12,6 +12,8 @@
 	<p> Vehicle:  ${quote.vehicle} </p>
 	<p> Price: ${quote.price} </p>
 
+	<p> A delivery from ${quote.pickupPostcode} to ${quote.deliveryPostcode} using a ${quote.vehicle} will cost you ${quote.price}. </p>
+
 
 </body>
 </html>

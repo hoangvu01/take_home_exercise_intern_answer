@@ -22,23 +22,23 @@ public class QueryController {
 
   @RequestMapping(value = "/q", method = GET)
   public ModelAndView getQueryForm() {
-    return new ModelAndView("form", "quote", new Quote());
+    return new ModelAndView("basic/query_form", "quote", new Quote());
   }
 
   @RequestMapping(value = "/q", method = POST)
   public String submitQueryForm(@Valid @ModelAttribute("quote") Quote query, BindingResult result, ModelMap model) {
     if (result.hasErrors()) {
-      return "form";
+      return "basic/query_form";
     }
 
     final String uri = "http://localhost:8080/quote";
     Quote quote = restTemplate.postForObject(uri, query, Quote.class);
     model.addAttribute("quote", quote);
-    return "result";
+    return "basic/query_result";
   }
 
   @RequestMapping(value = "/_q", method = GET)
   public String getRealTimeQueryForm() {
-    return "realtime";
+    return "responsive/query";
   }
 }
